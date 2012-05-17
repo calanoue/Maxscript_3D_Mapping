@@ -1,4 +1,4 @@
-Max scripts to create 3D polygons from a 2D Tiger line census shapefile.
+3DS Max maxscripts to create 3D polygons from a 2D Tiger line census shapefile.
 
 xyNew_England3DS.csv - Holds shapes in the following row format - "<shape_name>, <x>, <y>". 
  - This specific file holds the county shapes of all the states in New England: MA, ME, CT, VT, NH, and RI.
