@@ -1,1 +1,29 @@
 Max scripts to create 3D polygons from a 2D Tiger line census shapefile.
+
+xyNew_England3DS.csv - Holds shapes in the following row format - "<shape_name>, <x>, <y>". 
+ - This specific file holds the county shapes of all the states in New England: MA, ME, CT, VT, NH, and RI.
+ - This file is created using a Python script that extracts these values from a Tiger Line Census .shp file. Shape
+   name can be any unique identifier found in the .dbf file of the .shp file.
+
+readInCSVFileScript.ms - Reads in a CSV file with the following row format - "<shape_name>, <x>, <y>". 
+ - For each <shape_name>, addNewSpline() creates a new spline with <shape_name> as its name.
+ - For each <x> and <y> coordinate pair under the <shape_name>, addKnot() adds a knot along the spline with a <z>
+   coordinate of 0 to ensure 2D.
+ - The new shape is then closed and the next <shape_name> is used to create the next spline.
+
+applyModifiers.ms - Selects all the newly created shapes and applies certain modifiers.
+ - Each spline shape is extruded by a small amount and capped to become a 3D solid.
+ - Because the edges of the shapes are touching each other, there is no way to differentiate between the shapes.
+   - Quadify_Mesh() adds evenly spaced vertices throughout the 3D polygon.
+     - The quadsize parameter should be 1.0 instead of 4.0 because of problems with some of the country boundaries. 
+       Currently, the computer I use does not have the power to change this parameter to 1.0, so I am leaving at 4.0 for now.
+   - Given the evenly spaced vertices, it is easy to run TurboSmooth() (or MeshSmooth()) on each shape to smooth the edges
+     and give the shapes a sense of space between them.
+
+CreateGlassMaterial.ms - Creates a glass material.
+ - Adds a new realistic glass material to the scene material if the user wants a glossy look on all faces of the shapes.
+
+groupObjects.ms - Groups the objects with similar names.
+ - Due to the nature of the countries, they are sometimes made up of multiple polygons, i.e. the USA has Puerto Rico,
+   Alaska, Hawaii, etc, so this function groups the multiple polygons under a single <shape_name>.
+ - The multiple polygons are also assigned the same wirecolor as the main polygon shape.
